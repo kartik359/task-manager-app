@@ -42,7 +42,7 @@ app.use(express.json())
 app.use(cookieParser())
 
 // Serve static files from React build folder (for production)
-app.use(express.static(path.join(__dirname, "../frontend/dist")))
+app.use(express.static(path.join(__dirname, "public")))
 
 // Serve static files from "uploads" folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
@@ -69,7 +69,7 @@ app.use((err, req, res, next) => {
 // Serve frontend for all non-API routes (SPA fallback)
 app.get("/{*path}", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
+    res.sendFile(path.join(__dirname, "public/index.html"))
   } else {
     res.status(404).json({ success: false, message: "Not Found" })
   }
