@@ -27,7 +27,7 @@ mongoose
 
 const app = express()
 
-// Middleware to handle cors - allow both localhost and any Vercel preview domains
+// Middleware to handle cors - allow Vercel domains and localhost
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
@@ -38,7 +38,6 @@ const corsOptions = {
       "https://task-manager-app-m8rk-kdncpylpq.vercel.app"
     ]
     
-    // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true)
     
     if (allowedOrigins.includes(origin)) {
@@ -58,9 +57,6 @@ app.use(express.json())
 
 app.use(cookieParser())
 
-// Serve static files from React build folder (for production)
-app.use(express.static(path.join(__dirname, "public")))
-
 // Serve static files from "uploads" folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
@@ -73,7 +69,6 @@ app.use("/api/reports", reportRoutes)
 // Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
-
   const message = err.message || "Internal Server Error"
 
   res.status(statusCode).json({
@@ -81,15 +76,6 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   })
-})
-
-// Serve frontend for all non-API routes (SPA fallback)
-app.get("/{*path}", (req, res) => {
-  if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(__dirname, "public/index.html"))
-  } else {
-    res.status(404).json({ success: false, message: "Not Found" })
-  }
 })
 
 app.listen(3000, () => {
