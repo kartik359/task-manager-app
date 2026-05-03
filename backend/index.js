@@ -50,7 +50,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
-app.options("/*", cors(corsOptions))
+// app.options("/*", cors(corsOptions))
 
 // Middleware to handle JSON object in req body
 app.use(express.json())
