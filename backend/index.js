@@ -30,13 +30,12 @@ const app = express()
 // Middleware to handle cors - allow Vercel domains and localhost
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      process.env.FRONT_END_URL,
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "https://task-manager-app-m8rk.vercel.app",
-      "https://task-manager-app-m8rk-kdncpylpq.vercel.app"
-    ]
+   const allowedOrigins = [
+  process.env.FRONT_END_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://mern-frontend-zeta-lilac.vercel.app", // ✅ ADD THIS
+]
     
     if (!origin) return callback(null, true)
     
@@ -51,6 +50,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.options("*", cors(corsOptions))
 
 // Middleware to handle JSON object in req body
 app.use(express.json())
