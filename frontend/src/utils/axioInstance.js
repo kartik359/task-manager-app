@@ -1,6 +1,7 @@
 import axios from "axios"
 
-const BASE_URL = "https://task-manager-app-production-175a.up.railway.app"
+// Use relative URLs - Vercel will proxy /api requests to Railway
+const BASE_URL = ""
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
