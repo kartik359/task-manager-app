@@ -67,7 +67,7 @@ app.use((err, req, res, next) => {
 })
 
 // Serve frontend for all non-API routes (SPA fallback)
-app.get("*", (req, res) => {
+app.get("/{*path}", (req, res) => {
   if (!req.path.startsWith("/api")) {
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
   } else {
