@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "cd ../frontend && npm install && npm run build && cp -r dist ../backend/public",
+    "build": "cd ../frontend && npm ci && npm run build && rm -rf ../backend/public && mkdir -p ../backend/public && cp -r dist/* ../backend/public/",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
@@ -26,4 +26,5 @@
   "devDependencies": {
     "nodemon": "^3.1.10"
   }
+}
 }
