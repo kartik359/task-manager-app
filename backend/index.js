@@ -27,14 +27,31 @@ mongoose
 
 const app = express()
 
-// Middleware to handle cors
-app.use(
-  cors({
-    origin: process.env.FRONT_END_URL || "http://localhost:5174",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-)
+// Middleware to handle cors - allow both localhost and any Vercel preview domains
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      process.env.FRONT_END_URL,
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://task-manager-app-m8rk.vercel.app",
+      "https://task-manager-app-m8rk-kdncpylpq.vercel.app"
+    ]
+    
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true)
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}
+
+app.use(cors(corsOptions))
 
 // Middleware to handle JSON object in req body
 app.use(express.json())
