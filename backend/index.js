@@ -41,6 +41,16 @@ app.use(express.json())
 
 app.use(cookieParser())
 
+// Serve static files from React build folder (for production)
+app.use(express.static(path.join(__dirname, "../frontend/dist")))
+
+// Serve frontend for all non-API routes (must be after static middleware)
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
+  }
+})
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000!")
 })
