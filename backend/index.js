@@ -44,25 +44,16 @@ app.use(cookieParser())
 // Serve static files from React build folder (for production)
 app.use(express.static(path.join(__dirname, "../frontend/dist")))
 
-// Serve frontend for all non-API routes (must be after static middleware)
-app.get("*", (req, res) => {
-  if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
-  }
-})
+// Serve static files from "uploads" folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000!")
-})
-
+// API routes
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/tasks", taskRoutes)
 app.use("/api/reports", reportRoutes)
 
-// serve static files from "uploads" folder
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
-
+// Error handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
 
@@ -73,4 +64,17 @@ app.use((err, req, res, next) => {
     statusCode,
     message,
   })
+})
+
+// Serve frontend for all non-API routes (SPA fallback)
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"))
+  } else {
+    res.status(404).json({ success: false, message: "Not Found" })
+  }
+})
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000!")
 })
